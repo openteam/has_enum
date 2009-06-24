@@ -21,17 +21,11 @@ module HasEnum
     module FormHelper
 
       def radio_button_enum(object_name, method, options = {})
-        _instance_tag(object_name, method, options).to_radio_button_enum_tag(options)
+        ActionView::Helpers::InstanceTag.new(object_name, method, self, options.delete(:object)).to_radio_button_enum_tag(options)
       end        
 
       def select_enum(object_name, method, options = {})
-        _instance_tag(object_name, method, options).to_select_enum_tag(options)
-      end        
-
-      private
-
-      def _instance_tag(object_name, method, options)
-        ActionView::Helpers::InstanceTag.new(object_name, method, self, options.delete(:object))
+        ActionView::Helpers::InstanceTag.new(object_name, method, self, options.delete(:object)).to_select_enum_tag(options)
       end
     end
     

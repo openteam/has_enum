@@ -1,0 +1,5 @@
+--colour
+--format progress
+--format failing_examples:tmp/failed_examples.txt
+--loadby mtime
+--reverse

@@ -1,0 +1,9 @@
+*.tmp
+*.tmproj
+tmp/
+doc/
+coverage/
+.DS_Store
+.dotest
+log/*
+spec/rails_root/log/*

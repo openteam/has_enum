@@ -12,18 +12,25 @@ end
 class ActionView::Helpers::InstanceTag
 
   def to_radio_button_enum_tag(options = {})
-    values = options.delete(:values) || object.class.enum(method_name.to_sym)
-    values = values.map do |val|
-      radio_button = to_radio_button_tag(val, options)
-      [ radio_button, to_label_tag(object.class.human_attribute_name(val), :for => radio_button.match(/ id="(.*?)"/)[1]) ]
-    end
-    values.flatten.join($/)
+    values_for_enum_tag.map do |val|
+      radio_button = to_radio_button_tag(val.last, options)
+      [ radio_button, to_label_tag(val.first, :for => radio_button.match(/ id="(.*?)"/)[1]) ] * $/
+    end.join($/)
   end
 
   def to_select_enum_tag(options = {})
-    values = options.delete(:values) || object.class.enum(method_name.to_sym)
     html_options = options.delete(:html) || {}
-    to_select_tag(values.map{ |val| [object.class.human_attribute_name(val), val] }, options, html_options)
+    to_select_tag(values_for_enum_tag, options, html_options)
+  end
+  
+  def values_for_enum_tag
+    values = object.class.enum(method_name.to_sym)
+    begin
+      translation = I18n.translate("activerecord.attributes.#{object.class.name.underscore}.#{method_name}_enum", :raise => true)
+      values.map { |val| [translation[val.to_sym], val] }
+    rescue I18n::MissingTranslationData
+      values.map { |val| Array(val) }
+    end
   end
 end
 

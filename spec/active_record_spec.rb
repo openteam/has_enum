@@ -52,6 +52,18 @@ describe HasEnum::ActiveRecord do
       @model.green? .should be_true
       @model.blue?  .should be_false
     end
+    
+    it "should define a named scope for each enum value" do
+      Model.red.proxy_options.should eql({
+        :conditions => {:color => 'red'}
+      })
+      Model.green.proxy_options.should eql({
+        :conditions => {:color => 'green'}
+      })
+      Model.blue.proxy_options.should eql({
+        :conditions => {:color => 'blue'}
+      })
+    end
   end
 
   describe "size enum" do

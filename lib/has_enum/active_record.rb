@@ -28,6 +28,12 @@ module HasEnum
             end
           end
         end
+        
+        if named_scopes = options.delete(:named_scopes)
+          values.each do |value|
+            named_scope value.to_sym, :conditions => {attribute => value}
+          end
+        end
 
         validate = options.delete(:validate)
       

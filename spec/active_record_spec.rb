@@ -30,6 +30,12 @@ describe HasEnum::ActiveRecord do
       @model.in_things? .should be_true
       @model.in_misc?   .should be_false
     end
+
+    it "should define named scopes for enum values" do
+      Model.in_stuff.proxy_options.should  eql({ :conditions => { :category => 'stuff'  }})
+      Model.in_things.proxy_options.should eql({ :conditions => { :category => 'things' }})
+      Model.in_misc.proxy_options.should   eql({ :conditions => { :category => 'misc'   }})
+    end
   end
   
   describe "color enum" do
@@ -53,16 +59,10 @@ describe HasEnum::ActiveRecord do
       @model.blue?  .should be_false
     end
     
-    it "should define a named scope for each enum value" do
-      Model.red.proxy_options.should eql({
-        :conditions => {:color => 'red'}
-      })
-      Model.green.proxy_options.should eql({
-        :conditions => {:color => 'green'}
-      })
-      Model.blue.proxy_options.should eql({
-        :conditions => {:color => 'blue'}
-      })
+    it "should define named scopes for enum values" do
+      Model.red.proxy_options.should   eql({ :conditions => { :color => 'red'   }})
+      Model.green.proxy_options.should eql({ :conditions => { :color => 'green' }})
+      Model.blue.proxy_options.should  eql({ :conditions => { :color => 'blue'  }})
     end
   end
 

@@ -30,8 +30,11 @@ module HasEnum
         end
         
         if named_scopes = options.delete(:named_scopes)
+          scope_prefix = named_scopes if named_scopes.is_a?(Symbol)
           values.each do |value|
-            named_scope value.to_sym, :conditions => {attribute => value}
+            scope_name = "#{value.parameterize.underscore}"
+            scope_name = "#{scope_prefix}_#{scope_name}" if scope_prefix
+            named_scope scope_name, :conditions => { attribute => value }
           end
         end
 

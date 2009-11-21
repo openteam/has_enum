@@ -16,7 +16,7 @@ module HasEnum
       def has_enum(attribute, values, options = {})
         options.assert_valid_keys(:validate, :query_methods, :named_scopes, :symbol)
 
-        values.map!(&:to_sym) if options[:symbol]
+        values = values.map(&(options[:symbol] ? :to_sym : :to_s))
         
         enum[attribute] = values.freeze
     

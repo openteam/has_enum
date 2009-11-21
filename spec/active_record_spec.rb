@@ -60,9 +60,9 @@ describe HasEnum::ActiveRecord do
     end
     
     it "should define named scopes for enum values" do
-      Model.red.proxy_options.should   eql({ :conditions => { :color => 'red'   }})
-      Model.green.proxy_options.should eql({ :conditions => { :color => 'green' }})
-      Model.blue.proxy_options.should  eql({ :conditions => { :color => 'blue'  }})
+      Model.red.   proxy_options.should eql({ :conditions => { :color => 'red'   }})
+      Model.green. proxy_options.should eql({ :conditions => { :color => 'green' }})
+      Model.blue.  proxy_options.should eql({ :conditions => { :color => 'blue'  }})
     end
   end
 
@@ -97,6 +97,12 @@ describe HasEnum::ActiveRecord do
     it "should define query methods for enum values" do
       @model.status = :pending
       @model.should be_pending
+    end
+    
+    it "should define named scopes for enum values" do
+      Model.pending. proxy_options.should eql({ :conditions => { :status => 'pending' }})
+      Model.failed.  proxy_options.should eql({ :conditions => { :status => 'failed'  }})
+      Model.done.    proxy_options.should eql({ :conditions => { :status => 'done'    }})
     end
   end
 

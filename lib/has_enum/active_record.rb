@@ -37,7 +37,7 @@ module HasEnum
           values.each do |value|
             scope_name = "#{value.to_s.parameterize.underscore}"
             scope_name = "#{scope_prefix}_#{scope_name}" if scope_prefix
-            named_scope scope_name, :conditions => { attribute => value }
+            named_scope scope_name, :conditions => { attribute => value.to_s }
           end
         end
 

@@ -23,7 +23,7 @@ module HasEnum
         if query_methods = options.delete(:query_methods)
           method_prefix = query_methods if query_methods.is_a?(Symbol)
           values.each do |value|
-            method_name = "#{value.parameterize.underscore}?"
+            method_name = "#{value.to_s.parameterize.underscore}?"
             method_name = "#{method_prefix}_#{method_name}" if method_prefix
             raise NameError, "Query method '#{method_name}' is already defined" if instance_methods.include?(method_name)
             define_method(method_name) do
@@ -35,7 +35,7 @@ module HasEnum
         if named_scopes = options.delete(:named_scopes)
           scope_prefix = named_scopes if named_scopes.is_a?(Symbol)
           values.each do |value|
-            scope_name = "#{value.parameterize.underscore}"
+            scope_name = "#{value.to_s.parameterize.underscore}"
             scope_name = "#{scope_prefix}_#{scope_name}" if scope_prefix
             named_scope scope_name, :conditions => { attribute => value }
           end

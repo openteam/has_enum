@@ -26,9 +26,9 @@ describe HasEnum::ActiveRecord do
     
     it "should define a query method with the prefix 'in_' for each enum value" do
       @model.category = 'things'
-      @model.in_stuff?  .should be_false
-      @model.in_things? .should be_true
-      @model.in_misc?   .should be_false
+      @model.should be_in_things
+      @model.should_not be_in_stuff
+      @model.should_not be_in_misc
     end
 
     it "should define named scopes for enum values" do
@@ -54,9 +54,9 @@ describe HasEnum::ActiveRecord do
     
     it "should define a query method for each enum value" do
       @model.color = 'green'
-      @model.red?   .should be_false
-      @model.green? .should be_true
-      @model.blue?  .should be_false
+      @model.should be_green
+      @model.should_not be_red
+      @model.should_not be_blue
     end
     
     it "should define named scopes for enum values" do
@@ -85,13 +85,18 @@ describe HasEnum::ActiveRecord do
   describe "status enum" do
 
     it "should return values as symbols" do
-      @model.status = "something"
-      @model.status.should eql(:something)
+      @model.status = "pending"
+      @model.status.should eql(:pending)
     end
     
     it "should accept symbols as values" do
-      @model.status = :something
-      @model.status.should eql(:something)
+      @model.status = :pending
+      @model.status.should eql(:pending)
+    end
+    
+    it "should define query methods for enum values" do
+      @model.status = :pending
+      @model.should be_pending
     end
   end
 

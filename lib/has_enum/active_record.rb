@@ -14,7 +14,10 @@ module HasEnum
       end
     
       def has_enum(attribute, values, options = {})
+        options.assert_valid_keys(:validate, :query_methods, :named_scopes, :symbol)
 
+        values.map!(&:to_sym) if options[:symbol]
+        
         enum[attribute] = values.freeze
     
         if query_methods = options.delete(:query_methods)
@@ -46,9 +49,17 @@ module HasEnum
         when Proc                   then validates_each(attribute, options, &validate)
         end
     
-        define_method(:"#{attribute}=") do |value|
-          write_attribute(attribute, value ? value.to_s : nil)
+        if options[:symbol]
+          define_method(attribute) do
+            if value = read_attribute(attribute)
+              value.to_sym
+            end
+          end
         end
+        
+        define_method(:"#{attribute}=") do |value|
+          write_attribute(attribute, value.blank? ? nil : value.to_s)
+        end          
       end
     end
   end

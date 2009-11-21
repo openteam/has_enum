@@ -3,7 +3,7 @@ require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 describe HasEnum::ActiveRecord do
   
   before :each do
-    @model = Model.new(:category => 'misc', :color => 'blue', :foo => 'bar')
+    @model = Model.new(:category => 'misc', :color => 'blue', :foo => 'bar', :status => :pending)
   end
   
   it "should return the values for a given enum attribute" do
@@ -76,10 +76,22 @@ describe HasEnum::ActiveRecord do
     end
     
     it "should not define query methods for enum values" do
-      [:small?, :medium?, :large?].each do |method|
-        @model.respond_to?(method).should be_false
+      %w( small? medium? large? ).each do |method|
         @model.should_not respond_to(method)
       end
+    end
+  end
+
+  describe "status enum" do
+
+    it "should return values as symbols" do
+      @model.status = "something"
+      @model.status.should eql(:something)
+    end
+    
+    it "should accept symbols as values" do
+      @model.status = :something
+      @model.status.should eql(:something)
     end
   end
 

@@ -21,16 +21,16 @@ describe ActionView::Helpers::FormHelper do
 
   it "should produce a radio_button_enum" do
     html = [
-      %(<input id="model_size_small" name="model[size]" type="radio" value="small" />),
-      %(<label for="model_size_small">small</label>),
-      %(<input id="model_size_medium" name="model[size]" type="radio" value="medium" />),
-      %(<label for="model_size_medium">medium</label>),
-      %(<input id="model_size_large" name="model[size]" type="radio" value="large" />),
-      %(<label for="model_size_large">large</label>)
+      %(<input id="model_status_pending" name="model[status]" type="radio" value="pending" />),
+      %(<label for="model_status_pending">pending</label>),
+      %(<input id="model_status_failed" name="model[status]" type="radio" value="failed" />),
+      %(<label for="model_status_failed">failed</label>),
+      %(<input id="model_status_done" name="model[status]" type="radio" value="done" />),
+      %(<label for="model_status_done">done</label>)
     ].join($/)
     
     fields_for(:model) do |fields|
-      fields.radio_button_enum(:size).should eql(html)
+      fields.radio_button_enum(:status).should eql(html)
     end
   end
 
@@ -45,10 +45,10 @@ describe ActionView::Helpers::FormHelper do
               stuff:  'Zeug'
               things: 'Sachen'
               misc:   'Diverses'
-            size_enum:
-              small:  'Klein'
-              medium: 'Mittel'
-              large:  'Groß'
+            status_enum:
+              pending: 'In Arbeit'
+              failed:  'Fehlgeschlagen'
+              done:    'Erledigt'
       YAML
       ))
     end
@@ -64,11 +64,11 @@ describe ActionView::Helpers::FormHelper do
 
     it "should translated labels for produce a radio_button_enum" do
       html = fields_for(:model) do |fields|
-        fields.radio_button_enum(:size)
+        fields.radio_button_enum(:status)
       end
-      html.should include(%(<label for="model_size_small">Klein</label>))
-      html.should include(%(<label for="model_size_medium">Mittel</label>))
-      html.should include(%(<label for="model_size_large">Groß</label>))
+      html.should include(%(<label for="model_status_pending">In Arbeit</label>))
+      html.should include(%(<label for="model_status_failed">Fehlgeschlagen</label>))
+      html.should include(%(<label for="model_status_done">Erledigt</label>))
     end
   end  
 end

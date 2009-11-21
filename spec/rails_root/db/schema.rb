@@ -4,6 +4,7 @@ ActiveRecord::Schema.define(:version => 0) do
     t.string "category"
     t.string "color"
     t.string "size"
+    t.string "status"
     t.string "foo"
   end
 

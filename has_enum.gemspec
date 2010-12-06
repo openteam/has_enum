@@ -8,16 +8,15 @@ Gem::Specification.new do |s|
   s.version = "0.2.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = ["Andreas Korth", "Konstantin Shabanov"]
+  s.authors = ["Dmitri Lihachev"]
   s.date = %q{2010-12-06}
   s.description = %q{has_enum weee}
-  s.email = %q{kes.eclipse@gmail.com}
+  s.email = %q{lda@openteam.ru}
   s.extra_rdoc_files = [
     "LICENSE.txt",
     "README.rdoc"
   ]
   s.files = [
-    ".document",
     "Gemfile",
     "Gemfile.lock",
     "LICENSE.txt",

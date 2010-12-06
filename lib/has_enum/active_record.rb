@@ -1,65 +1,60 @@
 module HasEnum
   module ActiveRecord
-    
     def self.included(base)
       base.write_inheritable_hash(:enum, {})
       base.extend(ClassMethods)
     end
-  
+
     module ClassMethods
-    
       def enum(attribute = nil)
         @enum ||= read_inheritable_attribute(:enum)
-        attribute ? @enum[attribute] : @enum
+        attribute ? @enum[attribute.to_sym] : @enum
       end
-    
-      def has_enum(attribute, values, options = {})
-        options.assert_valid_keys(:validate, :query_methods, :named_scopes, :symbol)
 
-        values = values.map(&(options[:symbol] ? :to_sym : :to_s))
-        
-        enum[attribute] = values.freeze
-    
-        if query_methods = options.delete(:query_methods)
-          method_prefix = query_methods if query_methods.is_a?(Symbol)
-          values.each do |value|
-            method_name = "#{value.to_s.parameterize.underscore}?"
-            method_name = "#{method_prefix}_#{method_name}" if method_prefix
-            raise NameError, "Query method '#{method_name}' is already defined" if instance_methods.include?(method_name)
-            define_method(method_name) do
-              send(attribute) == value
+      def has_enum(attributes, values, options = {})
+        [*attributes].each do |attribute|
+          attribute = attribute.to_sym
+          values = values.map(&:to_s)
+          enum[attribute] = values.freeze
+
+          if options[:query_methods] != false
+            enum[attribute].each do |val|
+              define_method(:"#{val}?") do
+                  self.send(attribute) == val
+              end
             end
           end
-        end
-        
-        if named_scopes = options.delete(:named_scopes)
-          scope_prefix = named_scopes if named_scopes.is_a?(Symbol)
-          values.each do |value|
-            scope_name = "#{value.to_s.parameterize.underscore}"
-            scope_name = "#{scope_prefix}_#{scope_name}" if scope_prefix
-            named_scope scope_name, :conditions => { attribute => value.to_s }
-          end
-        end
+          
+          define_method(:"#{attribute}=") do |value|
+            value = value.to_s if options[:symbols]
 
-        validate = options.delete(:validate)
-      
-        case validate
-        when :inclusion, nil, true  then validates_inclusion_of(attribute, options.merge(:in => values))
-        when :presence              then validates_presence_of(attribute, options)
-        when Proc                   then validates_each(attribute, options, &validate)
-        end
-    
-        if options[:symbol]
-          define_method(attribute) do
-            if value = read_attribute(attribute)
-              value.to_sym
+            if values.find{ |val| val == value }
+              write_attribute(attribute, value.blank? ? nil : value.to_s)
+            else
+              errors.add(:"#{attribute}", "#{value} is not in enum")
             end
           end
+          
+          define_method "human_#{attribute}" do
+            begin
+              key = "activerecord.attributes.#{self.class.name.underscore}.#{attribute}_enum.#{self.send(attribute)}"
+              translation = I18n.translate(key, :raise => true)
+            rescue I18n::MissingTranslationData
+              self.send(attribute).humanize
+            end
+          end
+
         end
-        
-        define_method(:"#{attribute}=") do |value|
-          write_attribute(attribute, value.blank? ? nil : value.to_s)
-        end          
+      end
+
+      def values_for_select_tag(enum)
+        values = enum(enum)
+        begin
+          translation = I18n.translate("activerecord.attributes.#{self.name.underscore}.#{enum}_enum", :raise => true)
+          values.map { |value| [translation[value.to_sym], value] }
+        rescue I18n::MissingTranslationData
+          values.map { |value| [value.humanize, value] }
+        end
       end
     end
   end

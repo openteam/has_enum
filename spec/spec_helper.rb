@@ -1,9 +1,26 @@
-ENV['RAILS_ENV'] = 'test'
+$LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
+$LOAD_PATH.unshift(File.dirname(__FILE__))
+require 'rspec'
+require 'rails/all'
+require 'has_enum'
 
-rails_root = File.dirname(__FILE__) + '/rails_root'
-require "#{rails_root}/config/environment.rb"
+ActiveRecord::Base.establish_connection(
+  :adapter  => 'sqlite3',
+  :database => 'spec/rspec.db'
+)
 
-require File.dirname(__FILE__) + "/model" unless defined?(Model)
+ActiveRecord::Schema.define(:version => 0) do
+  create_table "test_models", :force => true do |t|
+    t.string "category"
+    t.string "color"
+    t.string "size"
+    t.string "status"
+    t.string "foo"
+  end
 
-require 'spec'
-require 'spec/rails'
+  create_table "schema_info", :id => false, :force => true do |t|
+    t.integer "version"
+  end
+end
+
+require File.dirname(__FILE__) + "/test_model" unless defined?(Model)

@@ -1,9 +1,8 @@
 require File.dirname(__FILE__) + '/../spec_helper'
 
 describe ActionView::Helpers::FormHelper do
-  
   before :each do
-    @model = Model.new
+    @model = TestModel.new
     I18n.reload!
   end
   
@@ -13,9 +12,11 @@ describe ActionView::Helpers::FormHelper do
       %(<option value="things">things</option>),
       %(<option value="misc">misc</option></select>)
     ].join($/)
-    
-    fields_for(:model) do |fields|
-      fields.select_enum(:category).should eql(html)
+    p self.class
+    form_for @model do |f|
+      f.fields_for :model do |fields|
+        fields.select_enum(:category).should eql(html)
+      end
     end
   end
 
@@ -38,7 +39,7 @@ describe ActionView::Helpers::FormHelper do
     before :each do
       I18n.locale = :de
       I18n.backend.store_translations(:de, YAML::load(<<-YAML
-      activerecord: 
+      activerecord:
         attributes:
           model:
             category_enum:
@@ -70,6 +71,6 @@ describe ActionView::Helpers::FormHelper do
       html.should include(%(<label for="model_status_failed">Fehlgeschlagen</label>))
       html.should include(%(<label for="model_status_done">Erledigt</label>))
     end
-  end  
+  end
 end
 

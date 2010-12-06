@@ -1,44 +1,50 @@
-spec_root = File.dirname(__FILE__) + '/spec'
-
-require "#{spec_root}/rails_root/config/boot"
-
+require 'rubygems'
+require 'bundler'
+begin
+  Bundler.setup(:default, :development)
+rescue Bundler::BundlerError => e
+  $stderr.puts e.message
+  $stderr.puts "Run `bundle install` to install missing gems"
+  exit e.status_code
+end
 require 'rake'
-require 'rake/testtask'
-require 'rake/rdoctask'
-require 'tasks/rails'
-require 'spec/rake/spectask'
 
-spec_prereq = File.exist?(File.join(RAILS_ROOT, 'config', 'database.yml')) ? "db:test:prepare" : :noop
-task :noop do
+require 'jeweler'
+Jeweler::Tasks.new do |gem|
+  # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
+  gem.name = "has_enum"
+  gem.homepage = "https://github.com/etehtsea/has_enum"
+  gem.license = "MIT"
+  gem.summary = %Q{has_enum}
+  gem.description = %Q{has_enum weee}
+  gem.email = "lda@openteam.ru"
+  gem.authors = ["Dmitri Lihachev"]
+  gem.add_runtime_dependency     'rails', '> 3.0.0'
+  gem.add_development_dependency 'rspec', '> 2.2.0'
+  gem.add_development_dependency 'rails', '> 3.0.0'
+  gem.add_development_dependency 'sqlite3-ruby', '> 1.3.2'
+end
+Jeweler::RubygemsDotOrgTasks.new
+
+require 'rspec/core'
+require 'rspec/core/rake_task'
+RSpec::Core::RakeTask.new(:spec) do |spec|
+  spec.pattern = FileList['spec/**/*_spec.rb']
+end
+
+RSpec::Core::RakeTask.new(:rcov) do |spec|
+  spec.pattern = 'spec/**/*_spec.rb'
+  spec.rcov = true
 end
 
 task :default => :spec
-task :stats => "spec:statsetup"
 
-desc "Run all specs in spec directory (excluding plugin specs)"
-Spec::Rake::SpecTask.new(:spec => spec_prereq) do |t|
-  t.spec_opts = ['--options', "\"#{spec_root}/spec.opts\""]
-  t.spec_files = FileList['spec/**/*_spec.rb']
-end
+require 'rake/rdoctask'
+Rake::RDocTask.new do |rdoc|
+  version = File.exist?('VERSION') ? File.read('VERSION') : ""
 
-namespace :spec do
-  desc "Run all specs in spec directory with RCov (excluding plugin specs)"
-  Spec::Rake::SpecTask.new(:rcov) do |t|
-    t.spec_opts = ['--options', "\"#{spec_root}/spec.opts\""]
-    t.spec_files = FileList['spec/**/*_spec.rb']
-    t.rcov = true
-    t.rcov_opts = lambda do
-      IO.readlines("#{spec_root}/rcov.opts").map {|l| l.chomp.split " "}.flatten
-    end
-  end
-end
-
-# Generate the RDoc documentation
-Rake::RDocTask.new { |rdoc|
-  rdoc.rdoc_dir = 'doc'
-  rdoc.title    = "HasEnum -- Enumerations for ActiveRecord"
-  rdoc.options << '--line-numbers' << '--inline-source' << '-A cattr_accessor=object'
-  rdoc.options << '--charset' << 'utf-8'
-  rdoc.rdoc_files.include('README.rdoc')
+  rdoc.rdoc_dir = 'rdoc'
+  rdoc.title = "has_enum #{version}"
+  rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
-}
+end

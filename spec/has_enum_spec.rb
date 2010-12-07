@@ -62,9 +62,9 @@ describe HasEnum::ActiveRecord do
   end
 
   describe "status enum" do
-    it "should accept symbols as values" do
+    it "should accept symbols as symbols" do
       @model.status = :pending
-      @model.status.should eql("pending")
+      @model.status.should eql(:pending)
     end
     
     it "should define query methods for enum values" do

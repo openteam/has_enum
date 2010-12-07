@@ -11,27 +11,46 @@ module HasEnum
         attribute ? @enum[attribute.to_sym] : @enum
       end
 
+      
       def has_enum(attributes, values, options = {})
         [*attributes].each do |attribute|
           attribute = attribute.to_sym
-          values = values.map(&:to_s)
+          if options[:symbols]
+            values = values.map{|value| value.to_s.insert(0, ':')}
+          else
+            values = values.map(&:to_s)
+          end
           enum[attribute] = values.freeze
-
+          
           if options[:query_methods] != false
             enum[attribute].each do |val|
-              define_method(:"#{val}?") do
+              if options[:symbols]
+                define_method(:"#{val[1..-1]}?") do
+                  self.send(attribute).to_s == val[1..-1]
+                end
+              else
+                define_method(:"#{val}?") do
                   self.send(attribute) == val
+                end
               end
             end
           end
           
           define_method(:"#{attribute}=") do |value|
-            value = value.to_s if options[:symbols]
+            value = value.to_s.insert(0, ':') if options[:symbols]
 
             if values.find{ |val| val == value }
               write_attribute(attribute, value.blank? ? nil : value.to_s)
             else
               errors.add(:"#{attribute}", "#{value} is not in enum")
+            end
+          end
+          
+          define_method(:"#{attribute}") do
+            if options[:symbols]
+              read_attribute(attribute.to_sym).tap{|str| str.slice!(0)}.to_sym
+            else
+              read_attribute(attribute.to_sym)
             end
           end
           

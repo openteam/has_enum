@@ -5,13 +5,12 @@
 
 Gem::Specification.new do |s|
   s.name = %q{has_enum}
-  s.version = "0.2.2"
+  s.version = "0.2.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = ["Dmitri Lihachev"]
-  s.date = %q{2010-12-06}
-  s.description = %q{has_enum weee}
-  s.email = %q{lda@openteam.ru}
+  s.authors = ["Andreas Korth", "Konstantin Shabanov"]
+  s.date = %q{2010-12-07}
+  s.email = %q{kes.eclipse@gmail.com}
   s.extra_rdoc_files = [
     "LICENSE.txt",
     "README.rdoc"
@@ -38,7 +37,7 @@ Gem::Specification.new do |s|
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.7}
-  s.summary = %q{has_enum}
+  s.summary = %q{Gem for Rails to easily handle enumeration attributes in models}
   s.test_files = [
     "spec/has_enum_spec.rb",
     "spec/helpers/form_helper_spec.rb",

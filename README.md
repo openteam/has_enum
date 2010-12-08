@@ -9,9 +9,44 @@ This gem has been designed for Rails 3 only.
 ### Install gem
 
 Insert
-    gem 'cream' :git => 'git://github.com/openteam/has_enum.git'
+    gem 'has_enum' :git => 'git://github.com/openteam/has_enum.git'
 in your Rails 3 Gemfile. Then do
     $ bundle install
+
+## Usage
+### Models
+Here's example model:
+    class TestModel < ActiveRecord::Base
+      has_enum :category, %w( stuff things misc )
+      has_enum :color   , %w( red green blue )
+      has_enum :size    , %w( small medium large )   , :query_methods => false
+      has_enum :status  , [:pending, :failed, :done] , :symbols => true
+    end
+See [sample usage in specs]("https://github.com/openteam/has_enum/blob/master/spec/has_enum_spec.rb").
+
+### Views
+    radio_button_enum(object_name, method, options = {})
+    select_enum(object_name, method, options = {})
+#### Usage with Formtastic (Monkeypatch)
+If you are using another gems that inherited from formtastic the most simple method will be to add this code
+in your *config/initializers/formtastic.rb*:
+    class Formtastic::SemanticFormBuilder
+      def enum_input(method, options = {})
+        value = @object.send(method)
+        additional_params = {:as => :select, :collection => @object.class.values_for_select_tag(method)}
+        self.input(method, options.merge(additional_params)).gsub(/class="select/, 'class="enum')
+      end
+    end
+Or if you sure you don't use any the proper method is to inherit from it:
+   class CustomBuilder < Formtastic::SemanticFormBuilder
+      def enum_input(method, options = {})
+        value = @object.send(method)
+        additional_params = {:as => :select, :collection => @object.class.values_for_select_tag(method)}
+        self.input(method, options.merge(additional_params)).gsub(/class="select/, 'class="enum')
+      end
+    end
+And uncomment
+    Formtastic::SemanticFormHelper.builder = CustomBuilder
 
 ## Running Tests
 

@@ -22,7 +22,7 @@ Here's example model:
       has_enum :size    , %w( small medium large )   , :query_methods => false
       has_enum :status  , [:pending, :failed, :done] , :symbols => true
     end
-See [sample usage in specs]("https://github.com/openteam/has_enum/blob/master/spec/has_enum_spec.rb").
+See [sample usage in specs](https://github.com/openteam/has_enum/blob/master/spec/has_enum_spec.rb).
 
 ### Views
     radio_button_enum(object_name, method, options = {})
@@ -51,8 +51,8 @@ And uncomment
 ## Running Tests
 
 Run the tests
-
     rake spec
+View specs are still failing. I'm working on it.
 
 ## Contributing to has_enum
  

@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{has_enum}
-  s.version = "0.3.0"
+  s.version = "0.3.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Andreas Korth", "Konstantin Shabanov"]
@@ -33,7 +33,7 @@ Gem::Specification.new do |s|
     "spec/spec_helper.rb",
     "spec/test_model.rb"
   ]
-  s.homepage = %q{https://github.com/etehtsea/has_enum}
+  s.homepage = %q{https://github.com/openteam/has_enum}
   s.licenses = ["MIT"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.7}

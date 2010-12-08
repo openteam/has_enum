@@ -1,5 +1,4 @@
 module ActionView::Helpers::FormHelper
-
   def radio_button_enum(object_name, method, options = {})
     ActionView::Helpers::InstanceTag.new(object_name, method, self, options.delete(:object)).to_radio_button_enum_tag(options)
   end
@@ -7,12 +6,10 @@ module ActionView::Helpers::FormHelper
   def select_enum(object_name, method, options = {})
     ActionView::Helpers::InstanceTag.new(object_name, method, self, options.delete(:object)).to_select_enum_tag(options)
   end
-
 end
 
 
 class ActionView::Helpers::InstanceTag
-
   def to_radio_button_enum_tag(options = {})
     values_for_enum_tag.map do |val|
       radio_button = to_radio_button_tag(val.last, options)
@@ -38,7 +35,6 @@ end
 
 
 class ActionView::Helpers::FormBuilder
-
   def radio_button_enum(method, options = {})
     @template.radio_button_enum(@object_name, method, objectify_options(options))
   end

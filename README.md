@@ -38,7 +38,7 @@ in your *config/initializers/formtastic.rb*:
       end
     end
 Or if you sure you don't use any the proper method is to inherit from it:
-   class CustomBuilder < Formtastic::SemanticFormBuilder
+    class CustomBuilder < Formtastic::SemanticFormBuilder
       def enum_input(method, options = {})
         value = @object.send(method)
         additional_params = {:as => :select, :collection => @object.class.values_for_select_tag(method)}

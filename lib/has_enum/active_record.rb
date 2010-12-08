@@ -15,7 +15,10 @@ module HasEnum
       def has_enum(attributes, values, options = {})
         [*attributes].each do |attribute|
           attribute = attribute.to_sym
-          if options[:symbols]
+          if values[0].is_a?(Symbol)
+            symbols = true
+          end
+          if symbols
             values = values.map{|value| value.to_s.insert(0, ':')}
           else
             values = values.map(&:to_s)
@@ -24,7 +27,7 @@ module HasEnum
           
           if options[:query_methods] != false
             enum[attribute].each do |val|
-              val = val[1..-1] if options[:symbols]
+              val = val[1..-1] if symbols
               define_method(:"#{val}?") do
                 self.send(attribute).to_s == val
               end
@@ -32,7 +35,7 @@ module HasEnum
           end
           
           define_method(:"#{attribute}=") do |value|
-            value = value.to_s.insert(0, ':') if options[:symbols]
+            value = value.to_s.insert(0, ':') if symbols
 
             if values.find{ |val| val == value }
               write_attribute(attribute, value.blank? ? nil : value.to_s)
@@ -42,7 +45,7 @@ module HasEnum
           end
           
           define_method(:"#{attribute}") do
-            if options[:symbols]
+            if symbols
               read_attribute(attribute.to_sym).tap{|str| str.slice!(0)}.to_sym
             else
               read_attribute(attribute.to_sym)

@@ -20,7 +20,7 @@ Here's example model:
       has_enum :category, %w( stuff things misc )
       has_enum :color   , %w( red green blue )
       has_enum :size    , %w( small medium large )   , :query_methods => false
-      has_enum :status  , [:pending, :failed, :done] , :symbols => true
+      has_enum :status  , [:pending, :failed, :done]
     end
 See [sample usage in specs](https://github.com/openteam/has_enum/blob/master/spec/has_enum_spec.rb).
 

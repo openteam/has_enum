@@ -12,7 +12,6 @@ describe ActionView::Helpers::FormHelper do
       %(<option value="things">things</option>),
       %(<option value="misc">misc</option></select>)
     ].join($/)
-    p self.class
     form_for @model do |f|
       f.fields_for :model do |fields|
         fields.select_enum(:category).should eql(html)

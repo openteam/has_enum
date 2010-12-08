@@ -24,14 +24,9 @@ module HasEnum
           
           if options[:query_methods] != false
             enum[attribute].each do |val|
-              if options[:symbols]
-                define_method(:"#{val[1..-1]}?") do
-                  self.send(attribute).to_s == val[1..-1]
-                end
-              else
-                define_method(:"#{val}?") do
-                  self.send(attribute) == val
-                end
+              val = val[1..-1] if options[:symbols]
+              define_method(:"#{val}?") do
+                self.send(attribute) == val
               end
             end
           end

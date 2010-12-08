@@ -10,7 +10,7 @@ This gem has been designed for Rails 3 only.
 
 Insert
     gem 'cream' :git => 'git://github.com/openteam/has_enum.git'
-    in your Rails 3 Gemfile. Then do
+in your Rails 3 Gemfile. Then do
     $ bundle install
 
 ## Running Tests

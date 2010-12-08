@@ -13,7 +13,7 @@ require 'jeweler'
 Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
   gem.name = "has_enum"
-  gem.homepage = "https://github.com/etehtsea/has_enum"
+  gem.homepage = "https://github.com/openteam/has_enum"
   gem.license = "MIT"
   gem.summary = %Q{Gem for Rails to easily handle enumeration attributes in models}
   gem.email = "kes.eclipse@gmail.com"

@@ -26,7 +26,7 @@ module HasEnum
             enum[attribute].each do |val|
               val = val[1..-1] if options[:symbols]
               define_method(:"#{val}?") do
-                self.send(attribute) == val
+                self.send(attribute).to_s == val
               end
             end
           end

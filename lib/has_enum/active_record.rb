@@ -54,6 +54,7 @@ module HasEnum
           
           define_method "human_#{attribute}" do
             begin
+              return nil unless self.send(attribute)
               key = "activerecord.attributes.#{self.class.name.underscore}.#{attribute}_enum.#{self.send(attribute)}"
               translation = I18n.translate(key, :raise => true)
             rescue I18n::MissingTranslationData

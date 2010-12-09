@@ -37,7 +37,7 @@ module HasEnum
           define_method(:"#{attribute}=") do |value|
             value = value.to_s.insert(0, ':') if symbols
 
-            if values.blank? or values.find{ |val| val == value }
+            if value.blank? or values.find{ |val| val == value }
               write_attribute(attribute, value.blank? ? nil : value.to_s)
             else
               errors.add(:"#{attribute}", "#{value} is not in enum")

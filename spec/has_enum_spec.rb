@@ -17,6 +17,11 @@ describe HasEnum::ActiveRecord do
       end
     end
     
+    it "should accept nil value for the attribute" do
+      @model.category = nil
+      @model.category.should be_nil
+    end
+    
     it "should reject non enum values for the attribute" do
       @model.category = 'objects'
       @model.errors[:category].size.should eql(1)
@@ -71,14 +76,10 @@ describe HasEnum::ActiveRecord do
       @model.status = :pending
       @model.should be_pending
     end
-  end
-
-  describe "foo enum" do
-    it "should accept attribute values starting with 'bar'" do
-      ['bar', 'barcode', 'bargain'].each do |value|
-        @model.foo = value
-        @model.should be_valid
-      end
+    
+    it "should accept nil value for the attribute" do
+      @model.status = nil
+      @model.status.should be_nil
     end
   end
 end

@@ -35,9 +35,9 @@ module HasEnum
           end
           
           define_method(:"#{attribute}=") do |value|
-            value = value.to_s.insert(0, ':') if symbols
-
-            if value.blank? or values.find{ |val| val == value }
+            value = value.to_s.insert(0, ':') if symbols and value
+            
+            if value.nil? or values.find{ |val| val == value }
               write_attribute(attribute, value.blank? ? nil : value.to_s)
             else
               errors.add(:"#{attribute}", "#{value} is not in enum")
@@ -45,7 +45,7 @@ module HasEnum
           end
           
           define_method(:"#{attribute}") do
-            if symbols
+            if symbols and read_attribute(attribute.to_sym)
               read_attribute(attribute.to_sym).tap{|str| str.slice!(0)}.to_sym
             else
               read_attribute(attribute.to_sym)

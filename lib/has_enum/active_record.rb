@@ -4,67 +4,48 @@ module HasEnum
       base.write_inheritable_hash(:enum, {})
       base.extend(ClassMethods)
     end
-
+    
     module ClassMethods
       def enum(attribute = nil)
         @enum ||= read_inheritable_attribute(:enum)
         attribute ? @enum[attribute.to_sym] : @enum
       end
-
       
-      def has_enum(attributes, values, options = {})
-        [*attributes].each do |attribute|
-          attribute = attribute.to_sym
-          if values[0].is_a?(Symbol)
-            symbols = true
+      def has_enum(attribute, values, options = {})
+        enum[attribute] = values.freeze
+        
+        if options[:query_methods] != false
+          values.each do |val|
+            define_method(:"#{val}?") { self.send(attribute) == val }
           end
-          if symbols
-            values = values.map{|value| value.to_s.insert(0, ':')}
+        end
+        
+        define_method(:"#{attribute}=") do |value|
+          if value.nil? or values.find{ |val| val == value }
+            set_value  = lambda { |value| value.is_a?(Symbol) ? Marshal.dump(value) : value }
+            self[:"#{attribute}"] = value.nil? ? nil : set_value.call(value)
           else
-            values = values.map(&:to_s)
+            errors.add(:"#{attribute}", "#{value} is not in enum")
           end
-          enum[attribute] = values.freeze
-          
-          if options[:query_methods] != false
-            enum[attribute].each do |val|
-              val = val[1..-1] if symbols
-              define_method(:"#{val}?") do
-                self.send(attribute).to_s == val
-              end
-            end
+        end
+        
+        define_method(:"#{attribute}") do
+          load_value = lambda { |value| value[0].getbyte(0) == 4 ? Marshal.load(value) : value }
+          value = self[:"#{attribute}"]
+          value ? load_value.call(value) : nil
+        end
+        
+        define_method "human_#{attribute}" do
+          begin
+            return nil unless self.send(attribute)
+            key = "activerecord.attributes.#{self.class.name.underscore}.#{attribute}_enum.#{self.send(attribute)}"
+            translation = I18n.translate(key, :raise => true)
+          rescue I18n::MissingTranslationData
+            self.send(attribute).humanize
           end
-          
-          define_method(:"#{attribute}=") do |value|
-            value = value.to_s.insert(0, ':') if symbols and value
-            
-            if value.nil? or values.find{ |val| val == value }
-              write_attribute(attribute, value.blank? ? nil : value.to_s)
-            else
-              errors.add(:"#{attribute}", "#{value} is not in enum")
-            end
-          end
-          
-          define_method(:"#{attribute}") do
-            if symbols and read_attribute(attribute.to_sym)
-              read_attribute(attribute.to_sym).tap{|str| str.slice!(0)}.to_sym
-            else
-              read_attribute(attribute.to_sym)
-            end
-          end
-          
-          define_method "human_#{attribute}" do
-            begin
-              return nil unless self.send(attribute)
-              key = "activerecord.attributes.#{self.class.name.underscore}.#{attribute}_enum.#{self.send(attribute)}"
-              translation = I18n.translate(key, :raise => true)
-            rescue I18n::MissingTranslationData
-              self.send(attribute).humanize
-            end
-          end
-
         end
       end
-
+      
       def values_for_select_tag(enum)
         values = enum(enum)
         begin

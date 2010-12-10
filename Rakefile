@@ -18,10 +18,6 @@ Jeweler::Tasks.new do |gem|
   gem.summary = %Q{Gem for Rails to easily handle enumeration attributes in models}
   gem.email = "kes.eclipse@gmail.com"
   gem.authors = ["Andreas Korth", "Konstantin Shabanov"]
-  gem.add_runtime_dependency     'rails',        '> 3.0.0'
-  gem.add_development_dependency 'rspec',        '> 2.2.0'
-  gem.add_development_dependency 'rails',        '> 3.0.0'
-  gem.add_development_dependency 'sqlite3-ruby', '> 1.3.2'
 end
 Jeweler::RubygemsDotOrgTasks.new
 

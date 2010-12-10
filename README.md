@@ -9,7 +9,7 @@ This gem has been designed for Rails 3 only.
 ### Install gem
 
 Insert
-    gem 'has_enum' :git => 'git://github.com/openteam/has_enum.git'
+    gem 'has_enum'
 in your Rails 3 Gemfile. Then do
     $ bundle install
 

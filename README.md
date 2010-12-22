@@ -22,6 +22,10 @@ Here's example model:
       has_enum :size    , %w( small medium large )   , :query_methods => false
       has_enum :status  , [:pending, :failed, :done]
     end
+Query methods are available by default. For example, query methods for color enum this methods will be available:
+      color_green?
+      color_red?
+      color_blue?
 See [sample usage in specs](https://github.com/openteam/has_enum/blob/master/spec/has_enum_spec.rb).
 
 ### Views

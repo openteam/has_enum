@@ -44,10 +44,10 @@ describe HasEnum::ActiveRecord do
     it "should define a query method for each enum value" do
       @model.color     = 'green'
       @model.category  = 'stuff'
-      @model.should be_stuff
-      @model.should be_green
-      @model.should_not be_red
-      @model.should_not be_blue
+      @model.should be_category_stuff
+      @model.should be_color_green
+      @model.should_not be_color_red
+      @model.should_not be_color_blue
     end
   end
 
@@ -74,7 +74,7 @@ describe HasEnum::ActiveRecord do
     
     it "should define query methods for enum values" do
       @model.status = :pending
-      @model.should be_pending
+      @model.should be_status_pending
     end
     
     it "should accept nil value for the attribute" do

@@ -16,7 +16,7 @@ module HasEnum
 
         if options[:query_methods] != false
           values.each do |val|
-            define_method(:"#{val}?") { self.send(attribute) == val }
+            define_method(:"#{attribute}_#{val}?") { self.send(attribute) == val }
           end
         end
 

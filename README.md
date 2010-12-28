@@ -18,7 +18,7 @@ in your Rails 3 Gemfile. Then do
 Here's example model:
     class TestModel < ActiveRecord::Base
       has_enum :category, %w( stuff things misc )
-      has_enum :color   , %w( red green blue )
+      has_enum :color   , %w( red green blue )       , :scopes        => true
       has_enum :size    , %w( small medium large )   , :query_methods => false
       has_enum :status  , [:pending, :failed, :done]
     end
@@ -26,6 +26,10 @@ Query methods are available by default. For example, query methods for color enu
       color_green?
       color_red?
       color_blue?
+If you set *:scopes => true* these scopes will be available:
+      color_green
+      color_red
+      color_blue
 See [sample usage in specs](https://github.com/openteam/has_enum/blob/master/spec/has_enum_spec.rb).
 
 ### Views

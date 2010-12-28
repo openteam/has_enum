@@ -29,7 +29,6 @@ Gem::Specification.new do |s|
     "spec/has_enum_spec.rb",
     "spec/helpers/form_helper_spec.rb",
     "spec/rcov.opts",
-    "spec/spec.opts",
     "spec/spec_helper.rb",
     "spec/test_model.rb"
   ]

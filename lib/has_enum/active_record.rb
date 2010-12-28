@@ -12,8 +12,15 @@ module HasEnum
       end
 
       def has_enum(attribute, values, options = {})
+        options.assert_valid_keys(:query_methods, :scopes)
         enum[attribute] = values.freeze
 
+        if options[:scopes]
+          values.each do |val|
+            scope :"#{attribute}_#{val}", where(:"#{attribute}" => "#{val}")
+          end
+        end
+        
         if options[:query_methods] != false
           values.each do |val|
             define_method(:"#{attribute}_#{val}?") { self.send(attribute) == val }

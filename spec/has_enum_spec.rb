@@ -49,6 +49,16 @@ describe HasEnum::ActiveRecord do
       @model.should_not be_color_red
       @model.should_not be_color_blue
     end
+    
+    it "should define a scope for each enum value" do
+      @model.color = 'red'
+      @model.save
+      @model2 = TestModel.new(:color => 'red')
+      @model2.save
+
+      TestModel.color_red.all.should eql TestModel.where(:color => 'red').all
+      TestModel.color_green.all.should be_empty
+    end
   end
 
   describe "size enum" do

@@ -45,7 +45,13 @@ module HasEnum
         define_method "human_#{attribute}" do
           begin
             return nil unless self.send(attribute)
-            key = "activerecord.attributes.#{self.class.model_name.i18n_key}.#{attribute}_enum.#{self.send(attribute)}"
+            
+            if self.class.model_name.respond_to?(:i18n_key)
+              var = self.class.model_name.i18n_key
+            else
+              var = self.class.name.underscore
+            end
+            key = "activerecord.attributes.#{var}.#{attribute}_enum.#{self.send(attribute)}"
             translation = I18n.translate(key, :raise => true)
           rescue I18n::MissingTranslationData
             self.send(attribute).humanize
@@ -56,7 +62,12 @@ module HasEnum
       def values_for_select_tag(enum)
         values = enum(enum)
         begin
-          translation = I18n.translate("activerecord.attributes.#{self.model_name.i18n_key}.#{enum}_enum", :raise => true)
+          if self.model_name.respond_to?(:i18n_key)
+            var = self.model_name.i18n_key
+          else
+            var = self.name.underscore
+          end
+          translation= I18n.translate("activerecord.attributes.#{var}.#{enum}_enum", :raise => true)
           values.map { |value| [translation[value.to_sym], value] }
         rescue I18n::MissingTranslationData
           values.map { |value| [value.humanize, value] }

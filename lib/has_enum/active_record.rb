@@ -52,6 +52,7 @@ module HasEnum
               var = self.class.name.underscore
             end
             key = "activerecord.attributes.#{var}.#{attribute}_enum.#{self.send(attribute)}"
+            p key
             translation = I18n.translate(key, :raise => true)
           rescue I18n::MissingTranslationData
             self.send(attribute).humanize

@@ -43,20 +43,14 @@ module HasEnum
         end
 
         define_method "human_#{attribute}" do
-          begin
             return nil unless self.send(attribute)
             
-            if self.class.model_name.respond_to?(:i18n_key)
-              var = self.class.model_name.i18n_key
-            else
-              var = self.class.name.underscore
-            end
-            key = "activerecord.attributes.#{var}.#{attribute}_enum.#{self.send(attribute)}"
-            p key
-            translation = I18n.translate(key, :raise => true)
-          rescue I18n::MissingTranslationData
-            self.send(attribute).humanize
-          end
+            klass = self.class
+            var = klass.model_name.respond_to?(:i18n_key) ? klass.model_name.i18n_key : klass.name.underscore
+            defaults = ["activerecord.attributes.#{var}.#{attribute}_enum.#{self.send(attribute)}"]
+            defaults << self.send(attribute).humanize
+            
+            translation = I18n.translate(defaults.shift, :defaults => defaults, :raise => true)
         end
       end
 

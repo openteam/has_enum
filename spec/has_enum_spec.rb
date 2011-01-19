@@ -106,6 +106,7 @@ describe HasEnum::ActiveRecord do
     end
     
     it "should translate values for the enum" do
+      I18n.reload!
       @model.status = :pending
       @model.human_status.should eql("На рассмотрении")
     end

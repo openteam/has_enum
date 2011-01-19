@@ -72,4 +72,3 @@ describe ActionView::Helpers::FormHelper do
     end
   end
 end
-

@@ -1,5 +1,9 @@
 module HasEnum
   module ActiveRecord
+   def klass_key
+     self.model_name.respond_to?(:i18n_key) ? self.model_name.i18n_key : self.name.underscore
+   end
+
     def self.included(base)
       base.write_inheritable_hash(:enum, {})
       base.extend(ClassMethods)
@@ -11,6 +15,10 @@ module HasEnum
         attribute ? @enum[attribute.to_sym] : @enum
       end
 
+      def human_enum(attribute = nil)
+        I18n.t("activerecord.attributes.#{self.klass_key}.#{attribute}_enum").values
+      end
+
       def has_enum(attribute, values, options = {})
         options.assert_valid_keys(:query_methods, :scopes)
         enum[attribute] = values.freeze
@@ -18,11 +26,10 @@ module HasEnum
         values.each do |val|
           scope :"#{attribute}_#{val}", where(:"#{attribute}" => "#{val}")
         end if options[:scopes]
-        
+
         values.each do |val|
           define_method(:"#{attribute}_#{val}?") { self.send(attribute) == val }
         end if options[:query_methods] != false
-
 
         define_method(:"#{attribute}=") do |value|
           if value.nil? or values.find{ |val| val == value }
@@ -42,10 +49,7 @@ module HasEnum
         define_method "human_#{attribute}" do
           return nil unless self.send(attribute)
 
-          klass     = self.class
-          klass_key = klass.model_name.respond_to?(:i18n_key) ? klass.model_name.i18n_key : klass.name.underscore
-          defaults  = ["activerecord.attributes.#{klass_key}.#{attribute}_enum.#{self.send(attribute)}"]
-
+          defaults  = ["activerecord.attributes.#{self.class.klass_key}.#{attribute}_enum.#{self.send(attribute)}"]
           defaults << self.send(attribute).to_s.humanize
           I18n.translate(defaults.shift, :default => defaults, :raise => true)
         end
@@ -54,8 +58,7 @@ module HasEnum
       def values_for_select_tag(enum)
         values = enum(enum)
         begin
-          klass_key  = self.model_name.respond_to?(:i18n_key) ? self.model_name.i18n_key : self.name.underscore
-          translation = I18n.translate("activerecord.attributes.#{klass_key}.#{enum}_enum", :raise => true)
+          translation = I18n.translate("activerecord.attributes.#{self.klass_key}.#{enum}_enum", :raise => true)
 
           values.map { |value| [translation[value.to_sym], value] }
         rescue I18n::MissingTranslationData

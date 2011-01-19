@@ -70,7 +70,7 @@ module HasEnum
       def values_for_select_tag(enum)
         values = enum(enum)
         begin
-          translation = I18n.translate("activerecord.attributes.#{_key}.#{enum}_enum", :raise => true)
+          translation = I18n.translate("activerecord.attributes.#{self.klass_key}.#{enum}_enum", :raise => true)
 
           values.map { |value| [translation[value.to_sym], value] }
         rescue I18n::MissingTranslationData

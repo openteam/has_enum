@@ -47,7 +47,7 @@ module HasEnum
             
             klass     = self.class
             klass_key = klass.model_name.respond_to?(:i18n_key) ? klass.model_name.i18n_key : klass.name.underscore
-            defaults  = ["activerecord.attributes.#{var}.#{attribute}_enum.#{self.send(attribute)}"]
+            defaults  = ["activerecord.attributes.#{klass_key}.#{attribute}_enum.#{self.send(attribute)}"]
             defaults << self.send(attribute).humanize
             
             I18n.translate(defaults.shift, :defaults => defaults, :raise => true)

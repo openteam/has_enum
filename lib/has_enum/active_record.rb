@@ -15,17 +15,14 @@ module HasEnum
         options.assert_valid_keys(:query_methods, :scopes)
         enum[attribute] = values.freeze
 
-        if options[:scopes]
-          values.each do |val|
-            scope :"#{attribute}_#{val}", where(:"#{attribute}" => "#{val}")
-          end
-        end
+        values.each do |val|
+          scope :"#{attribute}_#{val}", where(:"#{attribute}" => "#{val}")
+        end if options[:scopes]
         
-        if options[:query_methods] != false
-          values.each do |val|
-            define_method(:"#{attribute}_#{val}?") { self.send(attribute) == val }
-          end
-        end
+        values.each do |val|
+          define_method(:"#{attribute}_#{val}?") { self.send(attribute) == val }
+        end if options[:query_methods] != false
+
 
         define_method(:"#{attribute}=") do |value|
           if value.nil? or values.find{ |val| val == value }
@@ -43,14 +40,14 @@ module HasEnum
         end
 
         define_method "human_#{attribute}" do
-            return nil unless self.send(attribute)
-            
-            klass     = self.class
-            klass_key = klass.model_name.respond_to?(:i18n_key) ? klass.model_name.i18n_key : klass.name.underscore
-            defaults  = ["activerecord.attributes.#{klass_key}.#{attribute}_enum.#{self.send(attribute)}"]
-            defaults << self.send(attribute).humanize
-            
-            I18n.translate(defaults.shift, :defaults => defaults, :raise => true)
+          return nil unless self.send(attribute)
+
+          klass     = self.class
+          klass_key = klass.model_name.respond_to?(:i18n_key) ? klass.model_name.i18n_key : klass.name.underscore
+          defaults  = ["activerecord.attributes.#{klass_key}.#{attribute}_enum.#{self.send(attribute)}"]
+
+          defaults << self.send(attribute).to_s.humanize
+          I18n.translate(defaults.shift, :default => defaults, :raise => true)
         end
       end
 
@@ -62,7 +59,7 @@ module HasEnum
 
           values.map { |value| [translation[value.to_sym], value] }
         rescue I18n::MissingTranslationData
-          values.map { |value| [value.humanize, value] }
+          values.map { |value| [value.to_s.humanize, value] }
         end
       end
     end

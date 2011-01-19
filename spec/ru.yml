@@ -1,0 +1,8 @@
+ru:
+  activerecord:
+    attributes:
+      test_model:
+        status_enum:
+          pending: "На рассмотрении"
+          failed: "Обработано с ошибкой"
+          done: "Завершено"

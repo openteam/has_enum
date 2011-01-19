@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
 describe HasEnum::ActiveRecord do
@@ -25,6 +27,12 @@ describe HasEnum::ActiveRecord do
     it "should reject non enum values for the attribute" do
       @model.category = 'objects'
       @model.errors[:category].size.should eql(1)
+    end
+    
+    it "should define query methods for enum values" do
+      %w( stuff things misc ).each do |value|
+        @model.should respond_to(:"category_#{value}?")
+      end
     end
   end
     
@@ -70,9 +78,14 @@ describe HasEnum::ActiveRecord do
     end
     
     it "should not define query methods for enum values" do
-      %w( small? medium? large? ).each do |method|
-        @model.should_not respond_to(method)
+      %w(small medium large).each do |value|
+        @model.should_not respond_to(:"size_#{value}?")
       end
+    end
+    
+    it "should return humanized translation if not localized" do
+      @model.size = 'medium'
+      @model.human_size.should eql("Medium")
     end
   end
 
@@ -90,6 +103,11 @@ describe HasEnum::ActiveRecord do
     it "should accept nil value for the attribute" do
       @model.status = nil
       @model.status.should be_nil
+    end
+    
+    it "should translate values for the enum" do
+      @model.status = :pending
+      @model.human_status.should eql("На рассмотрении")
     end
   end
 end

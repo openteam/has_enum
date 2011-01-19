@@ -23,4 +23,7 @@ ActiveRecord::Schema.define(:version => 0) do
   end
 end
 
+I18n.load_path << 'spec/ru.yml'
+I18n.default_locale = :ru
+
 require File.dirname(__FILE__) + "/test_model" unless defined?(Model)

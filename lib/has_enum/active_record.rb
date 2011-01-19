@@ -1,9 +1,5 @@
 module HasEnum
   module ActiveRecord
-   def klass_key
-     self.model_name.respond_to?(:i18n_key) ? self.model_name.i18n_key : self.name.underscore
-   end
-
     def self.included(base)
       base.write_inheritable_hash(:enum, {})
       base.extend(ClassMethods)
@@ -16,7 +12,23 @@ module HasEnum
       end
 
       def human_enum(attribute = nil)
-        I18n.t("activerecord.attributes.#{self.klass_key}.#{attribute}_enum").values
+        if attribute.nil?
+          hash = {}
+          enum.each_pair do |attribute, values|
+            begin
+              hash[attribute] = I18n.t("activerecord.attributes.#{self.klass_key}.#{attribute}_enum", :raise => true).values
+            rescue I18n::MissingTranslationData
+              hash[attribute] = values.map { |value| value.to_s.humanize }
+            end
+          end
+          hash
+        else
+          begin
+            I18n.t("activerecord.attributes.#{self.klass_key}.#{attribute}_enum", :raise => true).values
+          rescue I18n::MissingTranslationData
+            enum[attribute].map { |value| value.to_s.humanize }
+          end
+        end
       end
 
       def has_enum(attribute, values, options = {})
@@ -58,12 +70,16 @@ module HasEnum
       def values_for_select_tag(enum)
         values = enum(enum)
         begin
-          translation = I18n.translate("activerecord.attributes.#{self.klass_key}.#{enum}_enum", :raise => true)
+          translation = I18n.translate("activerecord.attributes.#{_key}.#{enum}_enum", :raise => true)
 
           values.map { |value| [translation[value.to_sym], value] }
         rescue I18n::MissingTranslationData
           values.map { |value| [value.to_s.humanize, value] }
         end
+      end
+
+      def klass_key
+        self.model_name.respond_to?(:i18n_key) ? self.model_name.i18n_key : self.name.underscore
       end
     end
   end

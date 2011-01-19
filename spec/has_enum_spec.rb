@@ -11,10 +11,18 @@ describe HasEnum::ActiveRecord do
     TestModel.enum[:category].should eql(%w(stuff things misc))
   end
 
-  it "should return hash of translated values for attribute" do
+  it "should return array of translated values for attribute" do
     I18n.reload!
-    p TestModel.enum(:status)
-    p TestModel.human_enum(:status) #.should eql("хуй")
+    TestModel.human_enum(:status).should eql ["На рассмотрении", "Обработано с ошибкой", "Завершено"]
+    TestModel.human_enum(:category).should eql ['Stuff', 'Things', 'Misc']
+  end
+  
+  it "should return hash of attributes with translated values for each" do
+    I18n.reload!
+    TestModel.human_enum.should eql Hash[:category=>["Stuff", "Things", "Misc"],
+                                         :color=>["Red", "Green", "Blue"],
+                                         :size=>["Small", "Medium", "Large"],
+                                         :status=>["На рассмотрении", "Обработано с ошибкой", "Завершено"]]
   end
 
   describe "category enum" do

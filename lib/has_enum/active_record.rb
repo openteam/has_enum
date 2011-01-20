@@ -11,26 +11,6 @@ module HasEnum
         attribute ? @enum[attribute.to_sym] : @enum
       end
 
-      def human_enum(attribute = nil)
-        if attribute.nil?
-          hash = {}
-          enum.each_pair do |attribute, values|
-            begin
-              hash[attribute] = I18n.t("activerecord.attributes.#{self.klass_key}.#{attribute}_enum", :raise => true).values
-            rescue I18n::MissingTranslationData
-              hash[attribute] = values.map { |value| value.to_s.humanize }
-            end
-          end
-          hash
-        else
-          begin
-            I18n.t("activerecord.attributes.#{self.klass_key}.#{attribute}_enum", :raise => true).values
-          rescue I18n::MissingTranslationData
-            enum[attribute].map { |value| value.to_s.humanize }
-          end
-        end
-      end
-
       def has_enum(attribute, values, options = {})
         options.assert_valid_keys(:query_methods, :scopes)
         enum[attribute] = values.freeze
@@ -67,6 +47,29 @@ module HasEnum
         end
       end
 
+      def human_enum(attribute = nil)
+        scope = "activerecord.attributes.#{self.klass_key}"
+        i18n = lambda { |key| I18n.t(key, :scope => scope, :raise => true).values }
+
+        if attribute.nil?
+          trans_hash = {}
+          enum.each_pair do |attribute, values|
+            begin
+              trans_hash[attribute] = i18n.call("#{attribute}_enum")
+            rescue I18n::MissingTranslationData
+              trans_hash[attribute] = values.map { |value| value.to_s.humanize }
+            end
+          end
+          trans_hash
+        else
+          begin
+            i18n.call("#{attribute}_enum")
+          rescue I18n::MissingTranslationData
+            enum[attribute].map { |value| value.to_s.humanize }
+          end
+        end
+      end
+      
       def values_for_select_tag(enum)
         values = enum(enum)
         begin

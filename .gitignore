@@ -8,3 +8,4 @@ coverage/
 .dotest
 .redcar
 spec/*.db
+*.swp

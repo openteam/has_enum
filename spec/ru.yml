@@ -2,6 +2,10 @@ ru:
   activerecord:
     attributes:
       test_model:
+        size_enum:
+          small: "Маленький"
+          medium: "Средний"
+          large: "Большой"
         status_enum:
           pending: "На рассмотрении"
           failed: "Обработано с ошибкой"

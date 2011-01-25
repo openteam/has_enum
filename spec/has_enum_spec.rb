@@ -11,18 +11,40 @@ describe HasEnum::ActiveRecord do
     TestModel.enum[:category].should eql(%w(stuff things misc))
   end
 
-  it "should return array of translated values for attribute" do
+  it "should return hash of values with it's translated equivalent" do
     I18n.reload!
-    TestModel.human_enum(:status).should eql ["На рассмотрении", "Обработано с ошибкой", "Завершено"]
-    TestModel.human_enum(:category).should eql ['Stuff', 'Things', 'Misc']
+    TestModel.human_enum[:size].should eql Hash[:small  => "Маленький",
+                                                :medium => "Средний",
+                                                 :large  => "Большой"]
+    TestModel.human_enum[:status].should eql Hash[:pending => "На рассмотрении",
+                                                  :failed  =>"Обработано с ошибкой",
+                                                  :done    =>"Завершено"]
+    TestModel.human_enum[:category].should eql Hash[:stuff  => 'Stuff',
+                                                    :things => 'Things',
+                                                    :misc   => 'Misc']
   end
   
-  it "should return hash of attributes with translated values for each" do
+  it "should return hash of enums with hashes of attributes and theirs translated equivalent" do
     I18n.reload!
-    TestModel.human_enum.should eql Hash[:category=>["Stuff", "Things", "Misc"],
-                                         :color=>["Red", "Green", "Blue"],
-                                         :size=>["Small", "Medium", "Large"],
-                                         :status=>["На рассмотрении", "Обработано с ошибкой", "Завершено"]]
+    TestModel.human_enum.should eql Hash[:category => {:stuff=>"Stuff",
+                                                       :things=>"Things",
+                                                       :misc=>"Misc"},
+                                         :color    => {:red=>"Red",
+                                                       :green=>"Green",
+                                                       :blue=>"Blue"},
+                                         :size     => {:small=>"Маленький",
+                                                       :medium=>"Средний",
+                                                       :large=>"Большой"},
+                                         :status   => {:pending=>"На рассмотрении",
+                                                       :failed=>"Обработано с ошибкой",
+                                                       :done=>"Завершено"}]
+  end
+
+  it "should return translated value for attribute" do
+    I18n.reload!
+    TestModel.human_enum[:size][:large].should eql "Большой"
+    TestModel.human_enum[:color][:red].should eql "Red"
+    TestModel.human_enum[:status][:done].should eql "Завершено"
   end
 
   describe "category enum" do
@@ -98,8 +120,8 @@ describe HasEnum::ActiveRecord do
     end
 
     it "should return humanized translation if not localized" do
-      @model.size = 'medium'
-      @model.human_size.should eql("Medium")
+      @model.category = 'stuff'
+      @model.human_category.should eql("Stuff")
     end
   end
 

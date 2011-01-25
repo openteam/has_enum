@@ -1,12 +1,8 @@
+pkg/*
+*.gem
 .bundle
 *.tmp
-*.tmproj
-tmp/
-doc/
-coverage/
 .DS_Store
-.dotest
-.redcar
 spec/*.db
 *.swp
 Gemfile.lock

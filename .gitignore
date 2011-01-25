@@ -9,3 +9,4 @@ coverage/
 .redcar
 spec/*.db
 *.swp
+Gemfile.lock

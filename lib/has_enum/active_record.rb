@@ -47,27 +47,24 @@ module HasEnum
         end
       end
 
-      def human_enum(attribute = nil)
+      def human_enum
         scope = "activerecord.attributes.#{self.klass_key}"
-        i18n = lambda { |key| I18n.t(key, :scope => scope, :raise => true).values }
-
-        if attribute.nil?
-          trans_hash = {}
-          enum.each_pair do |attribute, values|
-            begin
-              trans_hash[attribute] = i18n.call("#{attribute}_enum")
-            rescue I18n::MissingTranslationData
-              trans_hash[attribute] = values.map { |value| value.to_s.humanize }
-            end
-          end
-          trans_hash
-        else
+        i18n = lambda { |key| I18n.t(key, :scope => scope, :raise => true) }
+        trans_hash = {}
+        
+        enum.each_pair do |attribute, values|
           begin
-            i18n.call("#{attribute}_enum")
+            trans_hash[attribute] = i18n.call("#{attribute}_enum")
           rescue I18n::MissingTranslationData
-            enum[attribute].map { |value| value.to_s.humanize }
+            hash = {}
+            values.each do |value|
+              hash[value.to_sym] = value.humanize
+            end
+            trans_hash[attribute] = hash
           end
         end
+        
+        trans_hash
       end
       
       def values_for_select_tag(enum)

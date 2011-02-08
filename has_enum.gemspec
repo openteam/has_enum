@@ -14,8 +14,8 @@ Gem::Specification.new do |s|
   s.licenses    = ["MIT"]
 
   s.add_dependency "rails", ["~> 3.0.0"]
-  s.add_development_dependency "rspec"
-  s.add_development_dependency "sqlite3"
+  s.add_development_dependency "rspec", ["~> 2.5"]
+  s.add_development_dependency "sqlite3", ["~> 1.3.3"]
 
   s.extra_rdoc_files = [ "LICENSE.txt", "README.md"]
   s.files            = `git ls-files`.split("\n")

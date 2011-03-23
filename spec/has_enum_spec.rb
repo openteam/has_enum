@@ -4,7 +4,7 @@ require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
 describe HasEnum do
   let :model do
-    TestModel.new(:category => :misc, :color => 'blue', :size => :small, :status => :pending)
+    TestModel.new(:category => :stuff, :color => 'red', :size => :small, :status => :pending)
   end
 
   let :human_enums do
@@ -120,14 +120,17 @@ describe HasEnum do
       TestModel.should_not respond_to :category_misc
     end
 
+    it "should translate category by human_category method" do
+      model.human_category.should eql 'Stuff'
+    end
   end
 
   describe "color enum" do
     it "should define a scope for each enum value" do
-      model.save # blue
+      model.save # red
 
       model2 = model.clone
-      model2.color = :red
+      model2.color = :blue
       model2.save
 
       TestModel.color_red.count.should eql 1

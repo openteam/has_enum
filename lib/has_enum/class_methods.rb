@@ -24,7 +24,7 @@ module HasEnum::ClassMethods
     end if options[:query_methods] != false
 
     define_method "human_#{attribute}" do
-      human_enum[attribute.to_sym]
+      self.class.human_enum[attribute][self[attribute]]
     end
 
     define_method "#{attribute}=" do | value |

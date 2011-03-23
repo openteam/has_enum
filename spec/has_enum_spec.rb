@@ -4,7 +4,7 @@ require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
 describe HasEnum do
   let :model do
-    TestModel.new(:category => :stuff, :color => 'red', :size => :small, :status => :pending)
+    TestModel.new(:category => :stuff, :status => :pending, :state => :done)
   end
 
   let :human_enums do
@@ -28,6 +28,11 @@ describe HasEnum do
         :pending  => 'На рассмотрении',
         :failed   => "Обработано с ошибкой",
         :done     => "Завершено"
+      },
+      :state => {
+        :pending  => 'Pending',
+        :failed   => 'Failed',
+        :done     => 'Done'
       },
     }.with_indifferent_access
   end
@@ -76,7 +81,13 @@ describe HasEnum do
       model.should_not be_valid
     end
 
-    it "should not accept nil value for the attribute" do
+    it "should accept nil value for the attribute on create" do
+      model.category = nil
+      model.should be_valid
+    end
+
+    it "should not accept nil value for the attribute on update" do
+      model.save
       model.category = nil
       model.should_not be_valid
     end
@@ -127,15 +138,32 @@ describe HasEnum do
 
   describe "color enum" do
     it "should define a scope for each enum value" do
-      model.save # red
+      model.color = 'red'
+      model.save
 
       model2 = model.clone
       model2.color = :blue
       model2.save
 
-      TestModel.color_red.count.should eql 1
       TestModel.color_red.all.should eql TestModel.where(:color => 'red').all
-      TestModel.color_green.all.should be_empty
+
+      TestModel.color_red.should be_one
+      TestModel.color_blue.should be_one
+      TestModel.color_green.count.should be_zero
+    end
+
+    it "should accept nil value for the attribute" do
+      model.color = nil
+      model.should be_valid
+      model.save
+      model.should be_valid
+    end
+
+    it "should accept blank value for the attribute" do
+      model.color = ''
+      model.should be_valid
+      model.save
+      model.should be_valid
     end
   end
 
@@ -148,14 +176,14 @@ describe HasEnum do
   end
 
   describe "status enum" do
-    it "should accept nil value for the attribute" do
+    it "should not accept nil value for the attribute" do
       model.status = nil
-      model.should be_valid
+      model.should_not be_valid
     end
 
-    it "should accept blank value for the attribute" do
+    it "should not accept blank value for the attribute" do
       model.status = ''
-      model.should be_valid
+      model.should_not be_valid
     end
   end
 end

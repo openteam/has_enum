@@ -5,34 +5,38 @@ module HasEnum::ClassMethods
     attribute ? @enum[attribute] : @enum
   end
 
-  def has_enum(attribute, values, options = {})
-    options.assert_valid_keys(:query_methods, :scopes, :allow_nil)
+  def has_enum(attributes, values, options = {})
+    options.assert_valid_keys(:query_methods, :scopes, :presence)
+
     values = values.map(&:to_s)
-    values << nil if options[:allow_nil]
-    enum[attribute] = values.freeze
 
-    validates attribute.to_sym, { :inclusion => { :in => values} }
+    [*attributes].map(&:to_sym).each do | attribute |
+      puts "#{attribute.inspect} => #{values.inspect}"
+      enum[attribute] = values
 
-    values.each do |val|
-      scope "#{attribute}_#{val}", where(attribute => val)
-    end if options[:scopes]
+      validates attribute, :inclusion => { :in => values + [nil]}
+      validates attribute, :presence => options[:presence] if options[:presence]
 
-    values.each do |val|
-      define_method "#{attribute}_#{val}?" do
-         self.send(attribute) == val.to_s
+      values.each do |val|
+        scope "#{attribute}_#{val}", where(attribute => val)
+      end if options[:scopes]
+
+      values.each do |val|
+        define_method "#{attribute}_#{val}?" do
+           self.send(attribute) == val.to_s
+        end
+      end if options[:query_methods] != false
+
+      define_method "human_#{attribute}" do
+        self.class.human_enum[attribute][self[attribute]]
       end
-    end if options[:query_methods] != false
 
-    define_method "human_#{attribute}" do
-      self.class.human_enum[attribute][self[attribute]]
+      define_method "#{attribute}=" do | value |
+        value = value.to_s
+        value = nil if value == ''
+        self[attribute] = value
+      end
     end
-
-    define_method "#{attribute}=" do | value |
-      value = value.to_s
-      value = nil if value == ''
-      self[attribute] = value
-    end
-
   end
 
   def human_enum

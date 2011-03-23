@@ -15,7 +15,7 @@ ActiveRecord::Schema.define(:version => 0) do
     t.string "color"
     t.string "size"
     t.string "status"
-    t.string "foo"
+    t.string "state"
   end
 
   create_table "schema_info", :id => false, :force => true do |t|

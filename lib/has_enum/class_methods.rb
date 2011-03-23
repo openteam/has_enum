@@ -7,7 +7,7 @@ module HasEnum::ClassMethods
 
   def has_enum(attribute, values, options = {})
     options.assert_valid_keys(:query_methods, :scopes, :allow_nil)
-    values.map!(&:to_s)
+    values = values.map(&:to_s)
     values << nil if options[:allow_nil]
     enum[attribute] = values.freeze
 

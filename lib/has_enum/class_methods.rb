@@ -11,7 +11,7 @@ module HasEnum::ClassMethods
     values << nil if options[:allow_nil]
     enum[attribute] = values.freeze
 
-    validates attribute, { :inclusion => { :in => values} }
+    validates attribute.to_sym, { :inclusion => { :in => values} }
 
     values.each do |val|
       scope "#{attribute}_#{val}", where(attribute => val)

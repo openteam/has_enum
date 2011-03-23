@@ -6,8 +6,8 @@ Gem::Specification.new do |s|
   s.name        = "has_enum"
   s.version     = HasEnum::VERSION
   s.platform    = Gem::Platform::RUBY
-  s.authors     = ["Andreas Korth", "Konstantin Shabanov"]
-  s.email       = ["kes.eclipse@gmail.com"]
+  s.authors     = ["Andreas Korth", "Konstantin Shabanov", "Dmitry Lihachev"]
+  s.email       = ["lda@openteam.ru"]
   s.homepage    = "http://github.com/openteam/has_enum"
   s.summary     = %q{Gem for Rails to easily handle enumeration attributes in models}
   s.description = %q{Gem for and Rails3 to easily handle enumeration attributes in ActiveRecord's models}

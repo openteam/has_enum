@@ -1,3 +1,3 @@
-source "http://rubygems.org"
+source "http://gems.openteam.ru"
 
 gemspec

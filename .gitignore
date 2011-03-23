@@ -6,3 +6,4 @@ pkg/*
 spec/*.db
 *.swp
 Gemfile.lock
+bin

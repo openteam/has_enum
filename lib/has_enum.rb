@@ -1,4 +1,15 @@
-require 'has_enum/active_record'
-require 'has_enum/helpers'
+module HasEnum
 
-ActiveRecord::Base.send(:include, HasEnum::ActiveRecord)
+  autoload :ClassMethods,            'has_enum/class_methods'
+
+  def self.included(base)
+    base.write_inheritable_hash(:enum, {}.with_indifferent_access)
+    base.extend ClassMethods
+  end
+
+end
+
+class ActiveRecord::Base
+  include HasEnum
+end
+

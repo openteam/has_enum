@@ -49,12 +49,12 @@ begin
     def enum_input(method, options = {})
       value = @object.send(method)
       options.reverse_merge! :as => :select,
-                             :collection => @object.class.human_enum[method].invert.to_a
+                             :collection => @object.class.human_enums[method].invert.to_a
       self.input(method, options).gsub(/class="select/, 'class="enum')
     end
 
     def input_with_enum(method, options={})
-      if @object.class.respond_to?(:enum) && @object.class.enum[method] && !options[:as]
+      if @object.class.respond_to?(:enum) && @object.class.enums[method] && !options[:as]
         enum_input(method, options)
       else
         input_without_enum(method, options)

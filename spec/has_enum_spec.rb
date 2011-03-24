@@ -37,28 +37,32 @@ describe HasEnum do
     }.with_indifferent_access
   end
 
+  it "should return values by name symbol" do
+    TestModel.enums[:state].should eql human_enums[:state].stringify_keys.keys
+  end
+
+  it "should return values by name string" do
+    TestModel.enums["state"].should eql human_enums[:state].stringify_keys.keys
+  end
 
   it "should return the values for a given enum attribute" do
-    TestModel.enum[:category].should eql human_enums[:category].stringify_keys.keys
+    TestModel.enums[:category].should eql human_enums[:category].stringify_keys.keys
   end
 
   it "should return hash of values with it's translated equivalent" do
-    I18n.reload!
-    TestModel.human_enum[:size].should     eql human_enums[:size]
-    TestModel.human_enum[:status].should   eql human_enums[:status]
-    TestModel.human_enum[:category].should eql human_enums[:category]
+    TestModel.human_enums[:size].should     eql human_enums[:size]
+    TestModel.human_enums[:status].should   eql human_enums[:status]
+    TestModel.human_enums[:category].should eql human_enums[:category]
   end
 
   it "should return hash of enums with hashes of attributes and theirs translated equivalent" do
-    I18n.reload!
-    TestModel.human_enum.should eql human_enums
+    TestModel.human_enums.should eql human_enums
   end
 
   it "should return translated value for attribute" do
-    I18n.reload!
-    TestModel.human_enum[:size][:large].should eql "Большой"
-    TestModel.human_enum[:color][:red].should eql "Red"
-    TestModel.human_enum[:status][:done].should eql "Завершено"
+    TestModel.human_enums[:size][:large].should eql "Большой"
+    TestModel.human_enums[:color][:red].should eql "Red"
+    TestModel.human_enums[:status][:done].should eql "Завершено"
   end
 
   describe "category enum" do

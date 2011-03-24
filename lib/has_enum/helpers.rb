@@ -54,7 +54,7 @@ begin
     end
 
     def input_with_enum(method, options={})
-      if @object.class.respond_to?(:enum) && @object.class.enums[method] && !options[:as]
+      if @object.class.respond_to?(:enums) && @object.class.enums[method] && !options[:as]
         enum_input(method, options)
       else
         input_without_enum(method, options)

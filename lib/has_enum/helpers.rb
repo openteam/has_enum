@@ -25,7 +25,7 @@ class ActionView::Helpers::InstanceTag
   end
 
   def values_for_enum_tag
-    object.class.human_enum[method_name].invert.to_a
+    object.class.human_enums[method_name].invert.to_a
   end
 end
 
@@ -38,4 +38,31 @@ class ActionView::Helpers::FormBuilder
   def select_enum(method, options = {})
     @template.select_enum(@object_name, method, objectify_options(options.merge(:include_blank => true)))
   end
+end
+
+
+begin
+  require 'formtastic'
+
+  Formtastic::SemanticFormBuilder.class_eval do
+
+    def enum_input(method, options = {})
+      value = @object.send(method)
+      options.reverse_merge! :as => :select,
+                             :collection => @object.class.human_enum[method].invert.to_a
+      self.input(method, options).gsub(/class="select/, 'class="enum')
+    end
+
+    def input_with_enum(method, options={})
+      if @object.class.respond_to?(:enum) && @object.class.enum[method] && !options[:as]
+        enum_input(method, options)
+      else
+        input_without_enum(method, options)
+      end
+    end
+
+    alias_method_chain :input, :enum
+
+  end
+rescue LoadError
 end

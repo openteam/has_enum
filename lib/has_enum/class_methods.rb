@@ -4,6 +4,10 @@ module HasEnum::ClassMethods
     @enums ||= read_inheritable_attribute(:enums)
   end
 
+  def enum_values(attribute)
+    enums[attribute]
+  end
+
   def has_enum(*params)
     options = params.extract_options!
     options.assert_valid_keys(:query_methods, :scopes, :presence)

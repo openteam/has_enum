@@ -8,6 +8,10 @@ module HasEnum::ClassMethods
     enums[attribute]
   end
 
+  def has_enum?(enum)
+    enums.include? enum
+  end
+
   def has_enum(*params)
     options = params.extract_options!
     options.assert_valid_keys(:query_methods, :scopes, :presence)

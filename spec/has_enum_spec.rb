@@ -37,6 +37,11 @@ describe HasEnum do
     }.with_indifferent_access
   end
 
+  it "should have has_enum? method" do
+    TestModel.should be_has_enum(:state)
+    TestModel.should_not be_has_enum(:some_attribute)
+  end
+
   it "should return values by name symbol" do
     TestModel.enums[:state].should eql human_enums[:state].stringify_keys.keys
   end

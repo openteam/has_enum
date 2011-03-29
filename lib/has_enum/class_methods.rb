@@ -1,7 +1,8 @@
 module HasEnum::ClassMethods
 
   def enums
-    @enums ||= read_inheritable_attribute(:enums)
+    read_inheritable_attribute(:enums) ||
+      write_inheritable_attribute(:enums, HashWithIndifferentAccess.new)
   end
 
   def enum_values(attribute)
@@ -68,15 +69,19 @@ module HasEnum::ClassMethods
   end
 
   def human_enum_values(enum)
-    begin
-      options = {:default => nil, :raise => true, :count => nil}
-      HashWithIndifferentAccess.new(human_attribute_name("#{enum}_enum", options))
-    rescue I18n::MissingTranslationData
-      (enums[enum] || []).inject HashWithIndifferentAccess.new do |hash, value|
+    values = human_attribute_name("#{enum}_enum", :count => nil)
+    unless values.is_a? Hash
+      values = (enums[enum] || []).inject({}) do |hash, value|
         hash[value] = value.humanize
         hash
       end
     end
+    values.with_indifferent_access
+  end
+
+
+  def values_for_select_tag(enum)
+    human_enums[enum].invert.to_a
   end
 
 end

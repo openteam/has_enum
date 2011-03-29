@@ -25,7 +25,7 @@ class ActionView::Helpers::InstanceTag
   end
 
   def values_for_enum_tag
-    object.class.human_enums[method_name].invert.to_a
+    object.class.values_for_select_tag(method_name)
   end
 end
 

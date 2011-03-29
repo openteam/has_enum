@@ -81,7 +81,7 @@ module HasEnum::ClassMethods
 
 
   def values_for_select_tag(enum)
-    human_enums[enum].invert.to_a
+    (human_enums[enum] || human_enum_values(enum)).invert.to_a
   end
 
 end

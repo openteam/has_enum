@@ -12,4 +12,8 @@ class ActiveRecord::Base
   include HasEnum
 end
 
-require 'has_enum/formtastic'
+begin
+  require 'formtastic'
+  require 'has_enum/formtastic'
+rescue LoadError
+end

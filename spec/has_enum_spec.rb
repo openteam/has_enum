@@ -42,9 +42,11 @@ describe HasEnum do
     }.with_indifferent_access
   end
 
-  it "should have has_enum? method" do
+  it "should have has_enum? and has_multiple_enum? methods" do
     TestModel.should be_has_enum(:state)
     TestModel.should_not be_has_enum(:some_attribute)
+    TestModel.should be_has_multiple_enum(:speed)
+    TestModel.should_not be_has_multiple_enum(:status)
   end
 
   it "should return values by name symbol" do

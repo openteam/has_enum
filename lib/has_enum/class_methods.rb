@@ -13,6 +13,10 @@ module HasEnum::ClassMethods
     enums.include? enum
   end
 
+  def has_multiple_enum?(enum)
+    has_enum?(enum) && serialized_attributes[enum.to_s] == Array
+  end
+
   def has_enum(*params)
     options = params.extract_options!
     options.assert_valid_keys(:query_methods, :scopes, :presence, :multiple)

@@ -15,7 +15,7 @@ module HasEnum::ClassMethods
 
   def has_enum(*params)
     options = params.extract_options!
-    options.assert_valid_keys(:query_methods, :scopes, :presence)
+    options.assert_valid_keys(:query_methods, :scopes, :presence, :multiple)
 
     raise ArgumentError, "Empty arguments list for has_enum call" if params.empty?
 
@@ -35,7 +35,12 @@ module HasEnum::ClassMethods
 
       enums[attribute] = values
 
-      validates attribute, :inclusion => { :in => values + [nil]}
+      if options[:multiple]
+        serialize attribute, Array
+      else
+        validates attribute, :inclusion => { :in => values + [nil]}
+      end
+
       validates attribute, :presence => options[:presence] if options[:presence]
 
       values.each do |val|
@@ -48,14 +53,33 @@ module HasEnum::ClassMethods
         end
       end if options[:query_methods] != false
 
-      define_method "human_#{attribute}" do
-        self.class.human_enums[attribute][self[attribute]]
+      if options[:multiple]
+        define_method "human_#{attribute}" do
+          return nil if self.send(attribute).empty?
+          self.send(attribute).map{|v| self.class.human_enums[attribute][v]}
+        end
+      else
+        define_method "human_#{attribute}" do
+          self.class.human_enums[attribute][self[attribute]]
+        end
       end
 
-      define_method "#{attribute}=" do | value |
-        value = value.to_s
-        value = nil if value == ''
-        self[attribute] = value
+      if options[:multiple]
+        define_method "#{attribute}=" do | values |
+          self[attribute] = [*values].compact.delete_if{|v| v.blank?}
+        end
+      else
+        define_method "#{attribute}=" do | value |
+          value = value.to_s
+          value = nil if value == ''
+          self[attribute] = value
+        end
+      end
+
+      if options[:multiple]
+       define_method attribute do
+         self[attribute] ||= []
+       end
       end
     end
   end

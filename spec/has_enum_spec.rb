@@ -4,7 +4,7 @@ require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
 
 describe HasEnum do
   let :model do
-    TestModel.new(:category => :stuff, :status => :pending, :state => :done)
+    TestModel.new(:category => :stuff, :status => :pending, :state => :done, :speed => :slow)
   end
 
   let :human_enums do
@@ -34,6 +34,11 @@ describe HasEnum do
         :failed   => 'Failed',
         :done     => 'Done'
       },
+      :speed => {
+        :slow     => 'Медленный',
+        :normal   => 'Нормальный',
+        :fast     => 'Быстрый'
+      }
     }.with_indifferent_access
   end
 
@@ -193,6 +198,34 @@ describe HasEnum do
     it "should not accept blank value for the attribute" do
       model.status = ''
       model.should_not be_valid
+    end
+  end
+
+  describe "speed enum" do
+    it "should return empty array for nil speed" do
+      model.speed = nil
+      model.speed.should eql []
+      model.should_not be_valid
+    end
+
+    it "empty array is not valid value for speed" do
+      model.speed = []
+      model.should_not be_valid
+    end
+
+    it "should support multiple values for attribute" do
+      model.speed = [:normal, :fast]
+      model.should be_valid
+    end
+
+    it "should return nil for human_speed if speed not initialized" do
+      model.speed = []
+      model.human_speed.should be_nil
+    end
+
+    it "should return array of translated values for human_speed" do
+      model.speed = [:normal, :fast]
+      model.human_speed.should eql %w[Нормальный Быстрый]
     end
   end
 end

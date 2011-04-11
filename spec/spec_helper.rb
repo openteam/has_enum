@@ -16,6 +16,7 @@ ActiveRecord::Schema.define(:version => 0) do
     t.string "size"
     t.string "status"
     t.string "state"
+    t.string "speed"
   end
 
   create_table "schema_info", :id => false, :force => true do |t|

@@ -4,6 +4,10 @@ ru:
       small: "Маленький"
       medium: "Средний"
       large: "Большой"
+    speed_enum:
+      slow:   Медленный
+      normal: Нормальный
+      fast:   Быстрый
 
   activerecord:
     attributes:

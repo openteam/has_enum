@@ -8,5 +8,7 @@ class TestModel < ActiveRecord::Base
 
   has_enum ["status", :state],  [:pending, :failed, :done], :presence       => true
 
+  has_enum :speed,              %w[slow normal fast],       :multiple       => true, :presence => true
+
 end
 

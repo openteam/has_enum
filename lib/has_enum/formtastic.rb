@@ -2,7 +2,7 @@ Formtastic::SemanticFormBuilder.class_eval do
 
   def enum_input(method, options = {})
     options.merge! :collection => object.class.values_for_select_tag(method)
-    if object.class.has_mutliple_enum? method
+    if object.class.has_multiple_enum? method
       check_boxes_input method, options
     else
       select_input method, options.merge(:wrapper_html => {:class => :enum})

@@ -12,3 +12,6 @@ class TestModel < ActiveRecord::Base
 
 end
 
+class AnotherModel < ActiveRecord::Base
+  has_enums
+end

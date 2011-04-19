@@ -17,6 +17,18 @@ module HasEnum::ClassMethods
     has_enum?(enum) && serialized_attributes[enum.to_s] == Array
   end
 
+  def has_enums
+    columns_hash.each do | column_name, column |
+      if human_attribute_name("#{column_name}_enum", :count => nil).is_a? Hash
+        if column.type == :text
+          has_enum column_name, :multiple => true
+        else
+          has_enum column_name
+        end
+      end
+    end
+  end
+
   def has_enum(*params)
     options = params.extract_options!
     options.assert_valid_keys(:query_methods, :scopes, :presence, :multiple)

@@ -77,6 +77,15 @@ describe HasEnum do
     TestModel.human_enums[:status][:done].should eql "Завершено"
   end
 
+  it "should autodetect all enums if has_enums called" do
+    AnotherModel.should     be_has_multiple_enum(:speed)
+
+    AnotherModel.should_not be_has_multiple_enum(:size)
+    AnotherModel.should     be_has_enum(:size)
+
+    AnotherModel.should_not be_has_enum(:status)
+  end
+
   describe "category enum" do
     it "should accept string enum values" do
       %w(stuff things misc).each do |value|

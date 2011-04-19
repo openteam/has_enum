@@ -19,6 +19,12 @@ ActiveRecord::Schema.define(:version => 0) do
     t.string "speed"
   end
 
+  create_table "another_models", :force => true do | t |
+    t.string "status"
+    t.string "size"
+    t.text   "speed"
+  end
+
   create_table "schema_info", :id => false, :force => true do |t|
     t.integer "version"
   end

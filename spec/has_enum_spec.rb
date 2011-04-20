@@ -238,5 +238,10 @@ describe HasEnum do
       model.speed = [:normal, :fast]
       model.human_speed.should eql %w[Нормальный Быстрый]
     end
+
+    it "should return array of string values for speed, even if initialized by symbols" do
+      model.speed = [:normal, :fast]
+      model.speed.should eql %w[normal fast]
+    end
   end
 end

@@ -82,7 +82,7 @@ module HasEnum::ClassMethods
 
       if options[:multiple]
         define_method "#{attribute}=" do | values |
-          self[attribute] = [*values].compact.delete_if{|v| v.blank?}
+          self[attribute] = [*values].compact.map(&:to_s).delete_if{|v| v.blank?}
         end
       else
         define_method "#{attribute}=" do | value |

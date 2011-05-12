@@ -4,7 +4,7 @@ class TestModel < ActiveRecord::Base
 
   has_enum :color,              %w[red green blue],         :scopes         => true
 
-  has_enum :size,                                           :query_methods  => false
+  has_enum :size,                                           :query_methods  => false, :validates => false
 
   has_enum ["status", :state],  [:pending, :failed, :done], :presence       => true
 

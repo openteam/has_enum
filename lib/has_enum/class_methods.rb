@@ -31,7 +31,7 @@ module HasEnum::ClassMethods
 
   def has_enum(*params)
     options = params.extract_options!
-    options.assert_valid_keys(:query_methods, :scopes, :presence, :multiple)
+    options.assert_valid_keys(:query_methods, :scopes, :presence, :multiple, :validates)
 
     raise ArgumentError, "Empty arguments list for has_enum call" if params.empty?
 
@@ -54,7 +54,7 @@ module HasEnum::ClassMethods
       if options[:multiple]
         serialize attribute, Array
       else
-        validates attribute, :inclusion => { :in => values + [nil]}
+        validates attribute, :inclusion => { :in => values + [nil]} unless options[:validates] == false
       end
 
       validates attribute, :presence => options[:presence] if options[:presence]

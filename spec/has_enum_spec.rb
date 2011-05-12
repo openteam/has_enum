@@ -198,6 +198,11 @@ describe HasEnum do
         model.should_not respond_to(:"size_#{value}?")
       end
     end
+
+    it "should accept not enum values" do
+      model.size = 'stuff'
+      model.should be_valid
+    end
   end
 
   describe "status enum" do

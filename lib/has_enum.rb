@@ -8,6 +8,8 @@ module HasEnum
 
 end
 
+require 'active_record'
+
 class ActiveRecord::Base
   include HasEnum
 end

@@ -26,7 +26,7 @@ module HasEnum::ClassMethods
           has_enum column_name
         end
       end
-    end
+    end if table_exists?
   end
 
   def has_enum(*params)

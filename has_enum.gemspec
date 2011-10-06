@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.description = %q{Gem for and Rails3 to easily handle enumeration attributes in ActiveRecord's models}
   s.licenses    = ["MIT"]
 
-  s.add_dependency "rails", ["~> 3.0.0"]
+  s.add_dependency "rails", ["> 3.0.0"]
   s.add_development_dependency "rspec", ["~> 2.5"]
   s.add_development_dependency "sqlite3", ["~> 1.3.3"]
 

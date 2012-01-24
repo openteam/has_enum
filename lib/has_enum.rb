@@ -3,6 +3,9 @@ module HasEnum
   autoload :ClassMethods,            'has_enum/class_methods'
 
   def self.included(base)
+    base.class_attribute :enums
+    base.enums ||= HashWithIndifferentAccess.new
+
     base.extend ClassMethods
   end
 

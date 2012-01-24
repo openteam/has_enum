@@ -1,10 +1,5 @@
 module HasEnum::ClassMethods
 
-  def enums
-    read_inheritable_attribute(:enums) ||
-      write_inheritable_attribute(:enums, HashWithIndifferentAccess.new)
-  end
-
   def enum_values(attribute)
     enums[attribute]
   end
@@ -14,7 +9,7 @@ module HasEnum::ClassMethods
   end
 
   def has_multiple_enum?(enum)
-    has_enum?(enum) && serialized_attributes[enum.to_s] == Array
+    has_enum?(enum) && serialized_attributes[enum.to_s].try(:object_class) == Array
   end
 
   def has_enums

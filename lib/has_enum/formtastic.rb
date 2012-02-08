@@ -19,5 +19,5 @@ Formtastic::SemanticFormBuilder.class_eval do
 
   alias_method_chain :default_input_type, :enum
 
-end
+end if defined? Formtastic::SemanticFormBuilder
 

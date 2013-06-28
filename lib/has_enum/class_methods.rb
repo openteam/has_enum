@@ -1,20 +1,17 @@
 module HasEnum::ClassMethods
 
-  def enums
-    read_inheritable_attribute(:enums) ||
-      write_inheritable_attribute(:enums, HashWithIndifferentAccess.new)
-  end
-
   def enum_values(attribute)
+  	return nil unless defined?(enums)
     enums[attribute]
   end
 
   def has_enum?(enum)
+  	return false unless defined?(enums)
     enums.include? enum
   end
 
   def has_multiple_enum?(enum)
-    has_enum?(enum) && serialized_attributes[enum.to_s] == Array
+    has_enum?(enum) && serialized_attributes[enum.to_s].try(:object_class) == Array
   end
 
   def has_enums
@@ -26,10 +23,17 @@ module HasEnum::ClassMethods
           has_enum column_name
         end
       end
-    end
+    end if table_exists?
   end
 
   def has_enum(*params)
+	self.class_eval do
+		unless defined?(self.enums)
+			self.class_attribute :enums
+		end
+		self.enums ||= HashWithIndifferentAccess.new
+	end
+
     options = params.extract_options!
     options.assert_valid_keys(:query_methods, :scopes, :presence, :multiple, :validates)
 

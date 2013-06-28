@@ -9,7 +9,7 @@ ActiveRecord::Base.establish_connection(
   :database => 'spec/rspec.db'
 )
 
-ActiveRecord::Schema.define(:version => 0) do
+ActiveRecord::Schema.define(:version => 20120124121410) do
   create_table "test_models", :force => true do |t|
     t.string "category"
     t.string "color"
@@ -23,10 +23,6 @@ ActiveRecord::Schema.define(:version => 0) do
     t.string "status"
     t.string "size"
     t.text   "speed"
-  end
-
-  create_table "schema_info", :id => false, :force => true do |t|
-    t.integer "version"
   end
 end
 

@@ -1,10 +1,12 @@
 module HasEnum::ClassMethods
 
   def enum_values(attribute)
+  	return nil unless defined?(enums)
     enums[attribute]
   end
 
   def has_enum?(enum)
+  	return false unless defined?(enums)
     enums.include? enum
   end
 
@@ -25,6 +27,13 @@ module HasEnum::ClassMethods
   end
 
   def has_enum(*params)
+	self.class_eval do
+		unless defined?(self.enums)
+			self.class_attribute :enums
+		end
+		self.enums ||= HashWithIndifferentAccess.new
+	end
+
     options = params.extract_options!
     options.assert_valid_keys(:query_methods, :scopes, :presence, :multiple, :validates)
 
